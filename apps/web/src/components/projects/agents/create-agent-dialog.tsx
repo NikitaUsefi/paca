@@ -118,7 +118,7 @@ function cliLoginCommand(provider: CLIProvider): string {
 		case "gemini-cli":
 			return "gemini";
 		default:
-			return "claude auth login";
+			return "claude login";
 	}
 }
 

@@ -32,13 +32,11 @@ func (claudeCode) HomeDirName() string { return claudeCodeHomeDir }
 func (claudeCode) APIKeyEnvVar() (string, bool) { return "ANTHROPIC_API_KEY", true }
 
 // AuthStatusCommand: confidence HIGH — confirmed directly inside a real
-// environment container. `claude login` (bare) does not exist as a
-// command at all (the actual subcommand is `claude auth login`); a
-// prior version of this adapter probed for
+// environment container. A prior version of this adapter probed for
 // ~/.claude/.credentials.json, which turned out to never be created by a
-// real, successful login either — that file-existence guess reported
-// "not authenticated" even right after the user completed `claude auth
-// login`. `claude auth status` is Claude Code's own status subcommand:
+// real, successful `claude login` either — that file-existence guess
+// reported "not authenticated" even right after the user completed
+// login. `claude auth status` is Claude Code's own status subcommand:
 // no network call, prints JSON to stdout, exits 1 when logged out.
 func (claudeCode) AuthStatusCommand() []string { return []string{"claude", "auth", "status"} }
 

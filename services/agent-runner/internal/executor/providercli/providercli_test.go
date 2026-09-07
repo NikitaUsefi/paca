@@ -165,7 +165,7 @@ func TestCodexSyncFilesSkipsNonStdio(t *testing.T) {
 // running each CLI — not hand-typed guesses. This is exactly the class of
 // bug that shipped once already: an earlier, unconfirmed file-existence
 // probe for Claude Code reported "not authenticated" even right after a
-// real, successful `claude auth login`, because the guessed credential
+// real, successful `claude login`, because the guessed credential
 // path was simply wrong.
 func TestParseAuthStatus_RealCapturedOutput(t *testing.T) {
 	cases := []struct {

@@ -38,13 +38,12 @@
 // each adapter. Claude Code's is confirmed directly (see claude_code.go):
 // an earlier version of this design used a guessed
 // ~/.claude/.credentials.json file-existence probe, which turned out not
-// to reflect real login state at all — `claude auth login` (the actual
-// subcommand; a bare `claude login` doesn't exist and fails silently-ish
-// with a generic error) never created that file, so every login looked
-// unverified even after a real, working login. `claude auth status`
-// (confirmed: prints JSON with a top-level "loggedIn" boolean, no network
-// call, safe to run on every click) is the CLI's own authoritative answer
-// instead of a guess about its internals.
+// to reflect real login state at all — `claude login` never created that
+// file, so every login looked unverified even after a real, working
+// login. `claude auth status` (confirmed: prints JSON with a top-level
+// "loggedIn" boolean, no network call, safe to run on every click) is
+// the CLI's own authoritative answer instead of a guess about its
+// internals.
 package providercli
 
 import "github.com/Paca-AI/agent-runner/internal/agent"
