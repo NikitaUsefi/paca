@@ -2,6 +2,11 @@
 	"activityPane": {
 		"title": "Activité",
 		"empty": "Aucune activité pour le moment",
+		"emptyComments": "Aucun commentaire pour le moment",
+		"filter": {
+			"comments": "Commentaires",
+			"all": "Toute l'activité"
+		},
 		"editingComment": "Modification du commentaire...",
 		"cancel": "Annuler",
 		"sendHint": "⌘↵ pour envoyer",
