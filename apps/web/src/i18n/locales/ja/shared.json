@@ -3,6 +3,7 @@
 		"title": "アクティビティ",
 		"empty": "アクティビティはまだありません",
 		"emptyComments": "コメントはまだありません",
+		"showAllActivity": "すべてのアクティビティを表示",
 		"filter": {
 			"comments": "コメント",
 			"all": "すべてのアクティビティ"

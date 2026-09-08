@@ -149,7 +149,7 @@ export function ActivityPane<T extends ActivityEntry>({
 				viewport.scrollTop = viewport.scrollHeight;
 			}
 		});
-	}, [visible]);
+	}, [sorted]);
 
 	const addMutation = useMutation({
 		mutationFn: (blocks: unknown[]) => {
@@ -224,15 +224,13 @@ export function ActivityPane<T extends ActivityEntry>({
 					)}
 				</div>
 				{hasNonCommentActivity && (
-					<div
-						role="tablist"
+					<fieldset
 						aria-label={t("activityPane.title")}
 						className="flex items-center gap-0.5 rounded-lg border border-border/30 bg-background/60 p-0.5"
 					>
 						<button
 							type="button"
-							role="tab"
-							aria-selected={filter === "comments"}
+							aria-pressed={filter === "comments"}
 							onClick={() => handleFilterChange("comments")}
 							className={cn(
 								"flex-1 rounded-md px-2 py-1 text-xs font-medium transition-all duration-150",
@@ -245,8 +243,7 @@ export function ActivityPane<T extends ActivityEntry>({
 						</button>
 						<button
 							type="button"
-							role="tab"
-							aria-selected={filter === "all"}
+							aria-pressed={filter === "all"}
 							onClick={() => handleFilterChange("all")}
 							className={cn(
 								"flex-1 rounded-md px-2 py-1 text-xs font-medium transition-all duration-150",
@@ -257,7 +254,7 @@ export function ActivityPane<T extends ActivityEntry>({
 						>
 							{t("activityPane.filter.all")}
 						</button>
-					</div>
+					</fieldset>
 				)}
 			</div>
 
@@ -283,7 +280,7 @@ export function ActivityPane<T extends ActivityEntry>({
 								onClick={() => handleFilterChange("all")}
 								className="mt-2 text-xs font-medium text-primary hover:underline"
 							>
-								{t("activityPane.filter.all")}
+								{t("activityPane.showAllActivity")}
 							</button>
 						</div>
 					)}

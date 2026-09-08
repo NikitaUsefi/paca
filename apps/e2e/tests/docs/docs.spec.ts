@@ -530,6 +530,9 @@ test.describe('Document comments and activity', () => {
     // 1. Open the Comments & activity panel
     await page.getByRole('button', { name: 'Comments & activity' }).click();
 
+    // The panel defaults to a comments-only view; switch to All activity to see the creation event
+    await page.getByRole('button', { name: 'All activity' }).click();
+
     // The activity feed shows "created this document" for the doc.created event
     await expect(page.getByText(/created this document/i)).toBeVisible({ timeout: 15_000 });
   });

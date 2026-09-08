@@ -3,6 +3,7 @@
 		"title": "Actividad",
 		"empty": "Aún no hay actividad",
 		"emptyComments": "Aún no hay comentarios",
+		"showAllActivity": "Mostrar toda la actividad",
 		"filter": {
 			"comments": "Comentarios",
 			"all": "Toda la actividad"

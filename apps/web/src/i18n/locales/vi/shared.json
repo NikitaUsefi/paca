@@ -3,6 +3,7 @@
 		"title": "Hoạt động",
 		"empty": "Chưa có hoạt động nào",
 		"emptyComments": "Chưa có bình luận nào",
+		"showAllActivity": "Xem tất cả hoạt động",
 		"filter": {
 			"comments": "Bình luận",
 			"all": "Tất cả hoạt động"
