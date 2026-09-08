@@ -903,13 +903,30 @@ func New(deps Deps) http.Handler {
 							r.Route("/{environmentId}/port-forwards/{portForwardId}/annotations", func(r chi.Router) {
 								r.With(httpmw.RequirePermissions(deps.Authorizer, httpmw.ProjectScopeFromParam("projectId"), authz.PermissionAnnotationsRead)).
 									Get("/", deps.Annotation.List)
-								r.With(httpmw.RequirePermissions(deps.Authorizer, httpmw.ProjectScopeFromParam("projectId"), authz.PermissionAnnotationsWrite)).
+								// The four POST routes below all decode their
+								// body with plain encoding/json, which parses
+								// JSON regardless of the declared Content-Type
+								// — so httpmw.RequireJSONContentType is what
+								// actually makes that header meaningful. These
+								// routes are reachable via the SameSite=None
+								// domainauth.ScopeAnnotation cookie (see
+								// AuthHandler.setAnnotationTokenCookies and
+								// httpmw.AnnotationExtensionPathPattern);
+								// without this, a cross-site request using a
+								// CORS-safelisted Content-Type (e.g.
+								// text/plain) would count as a "simple
+								// request" under the Fetch spec, skip CORS
+								// preflight entirely, and still be parsed —
+								// cookie attached — regardless of
+								// corsMiddleware's same-hostname check, which
+								// only ever gates a *preflighted* request.
+								r.With(httpmw.RequirePermissions(deps.Authorizer, httpmw.ProjectScopeFromParam("projectId"), authz.PermissionAnnotationsWrite), httpmw.RequireJSONContentType()).
 									Post("/", deps.Annotation.Create)
-								r.With(httpmw.RequirePermissions(deps.Authorizer, httpmw.ProjectScopeFromParam("projectId"), authz.PermissionAnnotationsWrite)).
+								r.With(httpmw.RequirePermissions(deps.Authorizer, httpmw.ProjectScopeFromParam("projectId"), authz.PermissionAnnotationsWrite), httpmw.RequireJSONContentType()).
 									Post("/upload-url", deps.Annotation.InitiateScreenshotUpload)
 								r.With(httpmw.RequirePermissions(deps.Authorizer, httpmw.ProjectScopeFromParam("projectId"), authz.PermissionAnnotationsRead)).
 									Get("/{annotationId}", deps.Annotation.Get)
-								r.With(httpmw.RequirePermissions(deps.Authorizer, httpmw.ProjectScopeFromParam("projectId"), authz.PermissionAnnotationsWrite)).
+								r.With(httpmw.RequirePermissions(deps.Authorizer, httpmw.ProjectScopeFromParam("projectId"), authz.PermissionAnnotationsWrite), httpmw.RequireJSONContentType()).
 									Post("/{annotationId}/complete-upload", deps.Annotation.CompleteScreenshotUpload)
 								r.With(httpmw.RequirePermissions(deps.Authorizer, httpmw.ProjectScopeFromParam("projectId"), authz.PermissionAnnotationsRead)).
 									Get("/{annotationId}/screenshot-url", deps.Annotation.GetScreenshotURL)
@@ -917,9 +934,9 @@ func New(deps Deps) http.Handler {
 									Patch("/{annotationId}/resolve", deps.Annotation.Resolve)
 								r.With(httpmw.RequirePermissions(deps.Authorizer, httpmw.ProjectScopeFromParam("projectId"), authz.PermissionAnnotationsResolve)).
 									Patch("/{annotationId}/reopen", deps.Annotation.Reopen)
-								r.With(httpmw.RequirePermissions(deps.Authorizer, httpmw.ProjectScopeFromParam("projectId"), authz.PermissionAnnotationsWrite)).
+								r.With(httpmw.RequirePermissions(deps.Authorizer, httpmw.ProjectScopeFromParam("projectId"), authz.PermissionAnnotationsWrite), httpmw.RequireJSONContentType()).
 									Post("/{annotationId}/comments", deps.Annotation.AddComment)
-								r.With(httpmw.RequirePermissions(deps.Authorizer, httpmw.ProjectScopeFromParam("projectId"), authz.PermissionAnnotationsWrite, authz.PermissionTasksWrite)).
+								r.With(httpmw.RequirePermissions(deps.Authorizer, httpmw.ProjectScopeFromParam("projectId"), authz.PermissionAnnotationsWrite, authz.PermissionTasksWrite), httpmw.RequireJSONContentType()).
 									Post("/{annotationId}/create-task", deps.Annotation.CreateTask)
 							})
 						}

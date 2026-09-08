@@ -73,9 +73,11 @@ func NewAuthHandler(svc domainauth.Service, cookie CookieConfig) *AuthHandler {
 }
 
 // Login handles POST /auth/login.
-// On success, access and refresh tokens are set as HttpOnly cookies (no
-// token values appear in the response body), alongside the client-readable
-// paca_port cookie (see portCookieName).
+// On success, the main access/refresh tokens and the domainauth.
+// ScopeAnnotation pair are all set as HttpOnly cookies (no token values
+// appear in the response body), alongside the two client-readable
+// paca_port/paca_scheme cookies (see portCookieName/schemeCookieName) —
+// see setTokenCookies for the full set.
 func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	var req dto.LoginRequest
 	if !middleware.BindJSON(w, r, &req) {
