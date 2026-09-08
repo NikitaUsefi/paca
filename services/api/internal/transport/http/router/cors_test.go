@@ -35,13 +35,14 @@ func TestSameHostnameOrigin(t *testing.T) {
 // hostname as the API, a different port, calling one of the extension's
 // actual routes gets an exact Origin echo plus Allow-Credentials —
 // required for its content script's `credentials: "include"` fetch to
-// actually have access_token/refresh_token attached and readable (see
-// corsMiddleware's own doc comment).
+// actually have a token attached and readable (see corsMiddleware's own
+// doc comment). auth/annotation-refresh, not auth/refresh, is the
+// extension's rotation endpoint — see domainauth.ScopeAnnotation.
 func TestCORSMiddleware_SameHostnameGetsCredentialedAccess(t *testing.T) {
 	mw := corsMiddleware(nil) // default allow-all config, as most deployments run
 
 	paths := []string{
-		"/api/v1/auth/refresh",
+		"/api/v1/auth/annotation-refresh",
 		"/api/v1/port-forwards/resolve",
 		"/api/v1/projects/proj-1/environments/env-1/port-forwards/pf-1/annotations",
 		"/api/v1/projects/proj-1/environments/env-1/port-forwards/pf-1/annotations/",
@@ -73,9 +74,13 @@ func TestCORSMiddleware_SameHostnameGetsCredentialedAccess(t *testing.T) {
 // regression test for the bug this scoping fixes: a same-hostname,
 // different-port origin (i.e. arbitrary code running on *any* forwarded
 // environment port, not just the extension) must NOT get credentialed
-// access to routes outside extensionCredentialedPathPattern — otherwise any
-// forwarded port on the platform would get ambient, full-API access on the
-// signed-in caller's behalf just by matching hostname.
+// access to routes outside httpmw.AnnotationExtensionPathPattern —
+// otherwise any forwarded port on the platform would get ambient, full-API
+// access on the signed-in caller's behalf just by matching hostname.
+// auth/refresh is included deliberately: it moved out of the credentialed
+// set when auth/annotation-refresh replaced it as the extension's rotation
+// endpoint, and it must stay out — the main session's refresh token has no
+// business being reachable cross-origin from a forwarded preview port.
 func TestCORSMiddleware_SameHostnameNonExtensionRouteGetsNoCredentials(t *testing.T) {
 	mw := corsMiddleware(nil)
 
@@ -84,6 +89,7 @@ func TestCORSMiddleware_SameHostnameNonExtensionRouteGetsNoCredentials(t *testin
 		"/api/v1/users/me",
 		"/api/v1/projects/proj-1/tasks",
 		"/api/v1/admin/settings",
+		"/api/v1/auth/refresh",
 	}
 	for _, path := range paths {
 		t.Run(path, func(t *testing.T) {

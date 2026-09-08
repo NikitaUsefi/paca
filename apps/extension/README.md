@@ -17,10 +17,10 @@ in one click.
   attaches your Paca login session to a page on that same host automatically
   — this extension never reads, stores, or handles any login token itself.
 - A lightweight, non-sensitive cookie (`paca_port`) that `services/api` sets
-  alongside `access_token`/`refresh_token` at login and on every session
-  refresh (see `auth_handler.go`'s `portCookieName`) — but, unlike those
-  two, deliberately *not* `HttpOnly`, since the extension reads it directly
-  via `document.cookie`. Its value is the port the Paca app is actually
+  alongside its auth cookies at login and on every session refresh (see
+  `auth_handler.go`'s `portCookieName`) — but, unlike the auth cookies,
+  deliberately *not* `HttpOnly`, since the extension reads it directly via
+  `document.cookie`. Its value is the port the Paca app is actually
   reachable on (it can be anything, not just 443/80 — a local dev server on
   `:3000`, say), which the same-hostname trick above makes visible on a
   forwarded preview page too. The content script always takes the port
@@ -30,6 +30,27 @@ in one click.
   enable step: the extension holds broad host permissions from install
   (see Install) and simply stays dormant, everywhere, until this cookie
   shows up.
+- A sibling cookie, `paca_scheme`, records whether the Paca app answers on
+  `http` or `https` — needed because a forwarded preview's own scheme (a
+  project's dev server might run its own local HTTPS, or might not) has no
+  necessary relationship to the Paca app's. The content script uses this
+  instead of assuming its own page's scheme, exactly the same "always read
+  fresh from the cookie" reasoning as `paca_port` above.
+- Two pairs of auth cookies exist, and which one the browser actually
+  attaches depends on that scheme comparison. `access_token`/`refresh_token`
+  (the same pair the main web app uses) ride along when the forwarded
+  preview happens to share the Paca app's scheme — modern browsers only
+  treat that as a "same-site" request, eligible for their
+  `SameSite=Lax`/`Strict` cookies, when the schemes actually match, not just
+  the hostname. When they don't match, a second, narrower pair
+  (`annotation_access_token`/`annotation_refresh_token`, `SameSite=None`)
+  takes over instead — usable *only* against the small set of endpoints this
+  extension actually calls (session rotation, port-forward resolution, and
+  page-annotation CRUD; see `middleware.AnnotationExtensionPathPattern`),
+  never as a substitute for a real login session anywhere else. Either way,
+  the extension itself still never reads, stores, or chooses between them —
+  the browser decides which cookies a given request qualifies for, and
+  `credentials: "include"` just sends whatever applies.
 - Everything else — listing comments, creating one, resolving, turning one
   into a task — is a normal authenticated call the content script makes
   directly to your Paca instance's API.
