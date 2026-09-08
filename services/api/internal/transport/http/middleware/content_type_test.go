@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"context"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -22,7 +23,7 @@ func TestRequireJSONContentType_Allows(t *testing.T) {
 	handler := newJSONOnlyTestHandler()
 	for _, ct := range cases {
 		t.Run(ct, func(t *testing.T) {
-			req := httptest.NewRequest(http.MethodPost, "/x", strings.NewReader(`{}`))
+			req := httptest.NewRequestWithContext(context.Background(), http.MethodPost, "/x", strings.NewReader(`{}`))
 			req.Header.Set("Content-Type", ct)
 			w := httptest.NewRecorder()
 			handler.ServeHTTP(w, req)
@@ -52,7 +53,7 @@ func TestRequireJSONContentType_RejectsSafelistedTypes(t *testing.T) {
 	handler := newJSONOnlyTestHandler()
 	for _, ct := range cases {
 		t.Run(ct, func(t *testing.T) {
-			req := httptest.NewRequest(http.MethodPost, "/x", strings.NewReader(`{}`))
+			req := httptest.NewRequestWithContext(context.Background(), http.MethodPost, "/x", strings.NewReader(`{}`))
 			if ct != "" {
 				req.Header.Set("Content-Type", ct)
 			}
