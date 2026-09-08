@@ -6,7 +6,6 @@ import (
 	"net"
 	"net/http"
 	"net/url"
-	"regexp"
 	"time"
 
 	"github.com/go-chi/chi/v5"
@@ -98,6 +97,7 @@ func New(deps Deps) http.Handler {
 			r.Route("/auth", func(r chi.Router) {
 				r.Post("/login", deps.Auth.Login)
 				r.Post("/refresh", deps.Auth.Refresh)
+				r.Post("/annotation-refresh", deps.Auth.AnnotationRefresh)
 				r.With(httpmw.Authn(deps.TokenManager)).Post("/logout", deps.Auth.Logout)
 				// Public — the link a password-set-token email points to;
 				// the token itself (not a session) proves the caller's right
@@ -1065,23 +1065,6 @@ func loggerMiddleware(log *slog.Logger) func(http.Handler) http.Handler {
 	}
 }
 
-// extensionCredentialedPathPattern matches the exact set of routes the Paca
-// browser extension's content script needs to call directly from a
-// forwarded environment port: refreshing its session, resolving which
-// project/environment/port-forward it's looking at, and the page-annotation
-// CRUD itself. See corsMiddleware's doc comment for why this set has to be
-// an explicit allow-list rather than "every route" — deliberately narrow so
-// that a same-hostname origin (i.e. arbitrary code running on *any*
-// forwarded port, not just the extension) can't use this exception to reach
-// unrelated, non-annotation endpoints with the caller's own credentials.
-var extensionCredentialedPathPattern = regexp.MustCompile(
-	`^/api/v1/(?:` +
-		`auth/refresh` +
-		`|port-forwards/resolve` +
-		`|projects/[^/]+/environments/[^/]+/port-forwards/[^/]+/annotations(?:/.*)?` +
-		`)$`,
-)
-
 // corsMiddleware sets CORS headers per the given allow-list. An empty list,
 // or a list containing "*", reflects Access-Control-Allow-Origin: * for
 // every request (the historical default — permissive, tighten in production
@@ -1091,28 +1074,36 @@ var extensionCredentialedPathPattern = regexp.MustCompile(
 //
 // One narrow exception, checked before either of those: a request whose
 // Origin has the same hostname as this server's own Host header (port
-// ignored) *and* whose path matches extensionCredentialedPathPattern gets
-// its exact Origin echoed back with Access-Control-Allow-Credentials: true,
-// regardless of CORS_ORIGINS. This is what lets the Paca browser
+// ignored) *and* whose path matches httpmw.AnnotationExtensionPathPattern
+// gets its exact Origin echoed back with Access-Control-Allow-Credentials:
+// true, regardless of CORS_ORIGINS. This is what lets the Paca browser
 // extension's content script — running directly on a forwarded environment
 // port, e.g. paca.example.com:31842 — call this API with `credentials:
-// "include"` and actually have access_token/refresh_token attached: cookies
-// are scoped by hostname, not by port, and SameSite is evaluated at the
-// same hostname-ignoring-port granularity, so the browser already sends
-// those cookies on such a request; without this branch, the *response*
-// would still be blocked from the extension's own JS by CORS.
+// "include"` and actually have a token attached: cookies are scoped by
+// hostname, not by port, so the browser already holds one there. Which
+// token depends on scheme, though: SameSite ignores port but NOT scheme
+// (modern browsers' "Schemeful Same-Site"), so access_token/refresh_token
+// (SameSite=Lax/Strict) only ride along when the forwarded port happens to
+// share the Paca app's own scheme; the domainauth.ScopeAnnotation pair
+// (SameSite=None — see AuthHandler.setAnnotationTokenCookies) is what
+// covers the far more common case where it doesn't. Either way, without
+// this branch the *response* would still be blocked from the extension's
+// own JS by CORS, cookies notwithstanding.
 //
 // The path check matters as much as the hostname check: the forwarded port
 // serves the *user's own dev app*, not code Paca controls, so any script
 // running there — not just the extension's content script — can make this
 // exact same credentialed request. Scoping the exception to
-// extensionCredentialedPathPattern means that page can, at most, act on
-// page annotations (and read its own port-forward's identity) on the
+// httpmw.AnnotationExtensionPathPattern means that page can, at most, act
+// on page annotations (and read its own port-forward's identity) on the
 // caller's behalf; without this scoping it would get free, ambient,
 // full-API access to every account the caller happens to be signed in as
 // (projects, tasks, docs, admin routes, ...) just because they had that
-// page open. It also can't be widened by CORS_ORIGINS — the pattern is
-// fixed at compile time, not configuration.
+// page open — and for a ScopeAnnotation token specifically,
+// middleware.applyAuthn enforces the exact same path restriction
+// independently of CORS, so it's held even if this Origin check were ever
+// loosened. Also can't be widened by CORS_ORIGINS — the pattern is fixed at
+// compile time, not configuration.
 func corsMiddleware(allowedOrigins []string) func(http.Handler) http.Handler {
 	allowAll := len(allowedOrigins) == 0
 	allowed := make(map[string]bool, len(allowedOrigins))
@@ -1129,7 +1120,7 @@ func corsMiddleware(allowedOrigins []string) func(http.Handler) http.Handler {
 			origin := r.Header.Get("Origin")
 			switch {
 			case origin != "" && sameHostnameOrigin(origin, r.Host) &&
-				extensionCredentialedPathPattern.MatchString(r.URL.Path):
+				httpmw.AnnotationExtensionPathPattern.MatchString(r.URL.Path):
 				w.Header().Set("Access-Control-Allow-Origin", origin)
 				w.Header().Set("Access-Control-Allow-Credentials", "true")
 				w.Header().Set("Vary", "Origin")

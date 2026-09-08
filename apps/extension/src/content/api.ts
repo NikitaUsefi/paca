@@ -7,10 +7,21 @@ import type {
 // Every call here runs from the content script itself, directly against
 // the Paca API — credentials: "include" works because this content script
 // only ever runs on the same hostname the Paca app itself is served from
-// (different port, same site — see services/api's corsMiddleware and the
-// extension's README), so access_token/refresh_token are attached by the
-// browser exactly as they are for the web app's own requests. No token of
-// any kind is read or stored by this extension.
+// (different port, possibly different scheme too — see services/api's
+// corsMiddleware and the extension's README), so the browser attaches
+// whichever of the two token pairs actually applies: access_token/
+// refresh_token when the forwarded preview happens to share the Paca app's
+// scheme (SameSite=Lax/Strict — a "same-site" request under modern
+// browsers' Schemeful Same-Site rules only when the schemes match), or the
+// ScopeAnnotation pair (SameSite=None, see auth_handler.go's
+// setAnnotationTokenCookies) when it doesn't. Either way, no token of any
+// kind is read or stored by this extension — refreshAccessToken below never
+// sees a token value, only whether the rotation call itself succeeded.
+//
+// The ScopeAnnotation refresh flow has its own endpoint
+// (/auth/annotation-refresh, not /auth/refresh) because it's the one that
+// actually works across a scheme mismatch — see domainauth.ScopeAnnotation's
+// doc comment for why a main refresh_token can't be relied on from here.
 
 export class ApiError extends Error {
 	constructor(
@@ -43,14 +54,23 @@ function rawFetch(
 // Coalesces concurrent refresh attempts into one in-flight request — a
 // page with several pins can easily fire a handful of calls at once right
 // as the 15-minute access token expires, and they'd otherwise all race
-// each other into /auth/refresh. Mirrors apps/web's own axios interceptor,
-// just without a request queue: refreshAccessToken's callers each retry
-// their own single request once it resolves.
+// each other into /auth/annotation-refresh. Mirrors apps/web's own axios
+// interceptor, just without a request queue: refreshAccessToken's callers
+// each retry their own single request once it resolves.
+//
+// Deliberately calls /auth/annotation-refresh, not the main /auth/refresh —
+// this content script's requests are only ever guaranteed to carry the
+// ScopeAnnotation cookie pair (see this file's top-of-file doc comment for
+// why the main pair can't be relied on cross-scheme), and the two rotation
+// endpoints each only accept their own token kind, not each other's (see
+// domainauth.Service.RefreshAnnotation's doc comment).
 let refreshInFlight: Promise<boolean> | null = null;
 
 function refreshAccessToken(baseUrl: string): Promise<boolean> {
 	if (!refreshInFlight) {
-		refreshInFlight = rawFetch(baseUrl, "/auth/refresh", { method: "POST" })
+		refreshInFlight = rawFetch(baseUrl, "/auth/annotation-refresh", {
+			method: "POST",
+		})
 			.then((res) => res.ok)
 			.catch(() => false)
 			.finally(() => {

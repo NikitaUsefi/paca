@@ -3,7 +3,7 @@ import {
 	getFailedRequests,
 	setActiveState,
 } from "../shared/messages";
-import { PORT_COOKIE, readPacaPort } from "../shared/paca-port";
+import { PORT_COOKIE, readPacaPort, readPacaScheme } from "../shared/paca-port";
 import type { ConsoleEntry, PageAnnotation } from "../shared/types";
 import * as api from "./api";
 import { copyToClipboard } from "./clipboard";
@@ -146,13 +146,16 @@ async function main(): Promise<void> {
 		);
 		return;
 	}
-	// This page's own hostname/protocol are the Paca app's too — the whole
-	// design rests on a forwarded preview and the Paca app sharing a
-	// hostname, differing only by port (see the cookie's own doc comment
-	// above) — so no separately-configured instance URL is needed at all;
-	// only the port varies, and that comes fresh from the cookie every
-	// time, never trusted from an earlier point in time.
-	const baseUrl = `${location.protocol}//${location.hostname}:${pacaPort}`;
+	// This page's own hostname is the Paca app's too — the whole design
+	// rests on a forwarded preview and the Paca app sharing a hostname,
+	// differing by port and possibly scheme (see paca-port.ts's own doc
+	// comments) — so no separately-configured instance URL is needed at
+	// all; both come fresh from cookies every time, never trusted from an
+	// earlier point in time or assumed to match this page's own
+	// location.protocol (a project's dev server and the Paca app can each
+	// independently be HTTP or HTTPS — nothing ties the two together).
+	const pacaScheme = readPacaScheme() ?? location.protocol.replace(":", "");
+	const baseUrl = `${pacaScheme}://${location.hostname}:${pacaPort}`;
 
 	let match: Awaited<ReturnType<typeof api.resolvePortForward>>;
 	try {
