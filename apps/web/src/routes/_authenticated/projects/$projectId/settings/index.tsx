@@ -17,13 +17,11 @@ import { RolesSettings } from "@/components/projects/settings/RolesSettings";
 import { TaskStatusesSettings } from "@/components/projects/settings/TaskStatusesSettings";
 import { TaskTypesSettings } from "@/components/projects/settings/TaskTypesSettings";
 import { usePermissions } from "@/hooks/use-permissions";
-import { currentUserQueryOptions } from "@/lib/auth-api";
+import { useProjectPermissions } from "@/hooks/use-project-permissions";
 import { RemoteComponent } from "@/lib/plugins/loader";
 import { usePluginRegistry } from "@/lib/plugins/registry";
 import {
 	customFieldsQueryOptions,
-	type ProjectMember,
-	type ProjectRole,
 	projectMembersQueryOptions,
 	projectQueryOptions,
 	projectRolesQueryOptions,
@@ -83,43 +81,18 @@ function SettingsPage() {
 	const { projectId } = Route.useParams();
 	const { data: project } = useQuery(projectQueryOptions(projectId));
 	const { hasPermission } = usePermissions();
-	const { data: currentUser } = useQuery(currentUserQueryOptions);
-	const { data: members = [] } = useQuery(
-		projectMembersQueryOptions(projectId),
-	);
-	const { data: roles = [] } = useQuery(projectRolesQueryOptions(projectId));
+	const { hasProjectPermission } = useProjectPermissions(projectId);
 
-	const myMembership = (members as ProjectMember[]).find(
-		(m) => m.user_id === currentUser?.id,
-	);
-	const myRole = (roles as ProjectRole[]).find(
-		(r) => r.id === myMembership?.project_role_id,
-	);
-	const hasProjectDelete = Boolean(
-		(myRole?.permissions as Record<string, boolean> | undefined)?.[
-			"projects.delete"
-		],
-	);
-	const hasProjectWrite = Boolean(
-		(myRole?.permissions as Record<string, boolean> | undefined)?.[
-			"projects.write"
-		],
-	);
-	const hasProjectRolesWrite = Boolean(
-		(myRole?.permissions as Record<string, boolean> | undefined)?.[
-			"project.roles.write"
-		],
-	);
-	const canDelete = hasPermission("projects.delete") || hasProjectDelete;
-	const canEditProject = hasPermission("projects.write") || hasProjectWrite;
+	const canDelete =
+		hasPermission("projects.delete") ||
+		hasProjectPermission("projects.delete");
+	const canEditProject =
+		hasPermission("projects.write") || hasProjectPermission("projects.write");
 	const canManageRoles =
-		hasPermission("project.roles.write") || hasProjectRolesWrite;
-	const hasTasksWrite = Boolean(
-		(myRole?.permissions as Record<string, boolean> | undefined)?.[
-			"tasks.write"
-		],
-	);
-	const canManageTasks = hasPermission("tasks.write") || hasTasksWrite;
+		hasPermission("project.roles.write") ||
+		hasProjectPermission("project.roles.write");
+	const canManageTasks =
+		hasPermission("tasks.write") || hasProjectPermission("tasks.write");
 
 	const { getRegistrations } = usePluginRegistry();
 	const pluginTabs = getRegistrations("project.settings.tab").filter(

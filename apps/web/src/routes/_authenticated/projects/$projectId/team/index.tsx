@@ -51,9 +51,9 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { usePermissions } from "@/hooks/use-permissions";
+import { useProjectPermissions } from "@/hooks/use-project-permissions";
 import { type User, usersInfiniteQueryOptions } from "@/lib/admin-api";
 import { type Agent, chattableAgentsQueryOptions } from "@/lib/agent-api";
-import { currentUserQueryOptions } from "@/lib/auth-api";
 import {
 	addProjectMember,
 	type ProjectMember,
@@ -741,24 +741,16 @@ function TeamPage() {
 	);
 
 	const { hasPermission } = usePermissions();
-	const { data: currentUser } = useQuery(currentUserQueryOptions);
+	const { hasProjectPermission } = useProjectPermissions(projectId);
 	const { data: project } = useQuery(projectQueryOptions(projectId));
 	const { data: members, isLoading } = useQuery(
 		projectMembersQueryOptions(projectId),
 	);
 	const { data: roles = [] } = useQuery(projectRolesQueryOptions(projectId));
 
-	const myMembership = (members ?? []).find(
-		(m) => m.user_id === currentUser?.id,
-	);
-	const myRole = roles.find((r) => r.id === myMembership?.project_role_id);
-	const hasProjectMembersWrite = Boolean(
-		(myRole?.permissions as Record<string, boolean> | undefined)?.[
-			"project.members.write"
-		],
-	);
 	const canManageMembers =
-		hasPermission("project.members.write") || hasProjectMembersWrite;
+		hasPermission("project.members.write") ||
+		hasProjectPermission("project.members.write");
 
 	const existingMemberIds = useMemo(
 		() => new Set((members ?? []).map((m) => m.user_id)),
