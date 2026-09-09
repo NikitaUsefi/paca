@@ -84,8 +84,7 @@ function SettingsPage() {
 	const { hasProjectPermission } = useProjectPermissions(projectId);
 
 	const canDelete =
-		hasPermission("projects.delete") ||
-		hasProjectPermission("projects.delete");
+		hasPermission("projects.delete") || hasProjectPermission("projects.delete");
 	const canEditProject =
 		hasPermission("projects.write") || hasProjectPermission("projects.write");
 	const canManageRoles =
