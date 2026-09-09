@@ -5,6 +5,7 @@
 		"emptyComments": "暂无评论",
 		"showAllActivity": "显示全部动态",
 		"filter": {
+			"label": "筛选动态",
 			"comments": "评论",
 			"all": "全部动态"
 		},

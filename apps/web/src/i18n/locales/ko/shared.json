@@ -5,6 +5,7 @@
 		"emptyComments": "아직 댓글이 없습니다",
 		"showAllActivity": "전체 활동 보기",
 		"filter": {
+			"label": "활동 필터",
 			"comments": "댓글",
 			"all": "전체 활동"
 		},

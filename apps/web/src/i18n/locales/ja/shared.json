@@ -5,6 +5,7 @@
 		"emptyComments": "コメントはまだありません",
 		"showAllActivity": "すべてのアクティビティを表示",
 		"filter": {
+			"label": "アクティビティをフィルター",
 			"comments": "コメント",
 			"all": "すべてのアクティビティ"
 		},

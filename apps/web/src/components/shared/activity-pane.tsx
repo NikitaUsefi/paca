@@ -225,7 +225,7 @@ export function ActivityPane<T extends ActivityEntry>({
 				</div>
 				{hasNonCommentActivity && (
 					<fieldset
-						aria-label={t("activityPane.title")}
+						aria-label={t("activityPane.filter.label")}
 						className="flex items-center gap-0.5 rounded-lg border border-border/30 bg-background/60 p-0.5"
 					>
 						<button

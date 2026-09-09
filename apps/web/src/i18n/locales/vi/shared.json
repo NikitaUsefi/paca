@@ -5,6 +5,7 @@
 		"emptyComments": "Chưa có bình luận nào",
 		"showAllActivity": "Xem tất cả hoạt động",
 		"filter": {
+			"label": "Lọc hoạt động",
 			"comments": "Bình luận",
 			"all": "Tất cả hoạt động"
 		},

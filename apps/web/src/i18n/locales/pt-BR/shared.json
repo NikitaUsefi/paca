@@ -5,6 +5,7 @@
 		"emptyComments": "Nenhum comentário ainda",
 		"showAllActivity": "Mostrar toda a atividade",
 		"filter": {
+			"label": "Filtrar atividade",
 			"comments": "Comentários",
 			"all": "Toda a atividade"
 		},
