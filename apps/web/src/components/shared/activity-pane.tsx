@@ -326,7 +326,7 @@ export function ActivityPane<T extends ActivityEntry>({
 					)}
 					<fieldset
 						className={cn(
-							"rounded-xl border border-border/30 bg-card/80 transition-all duration-200 overflow-hidden",
+							"min-w-0 rounded-xl border border-border/30 bg-card/80 transition-all duration-200 overflow-hidden",
 							editorFocused && "border-primary/25 shadow-sm shadow-primary/5",
 							"[&_.bn-editor]:min-h-6 [&_.bn-editor]:max-h-48 [&_.bn-editor]:overflow-y-auto [&_.bn-editor]:py-1.5 [&_.bn-editor]:px-3 [&_.bn-editor]:text-sm [&_.bn-editor]:leading-relaxed",
 						)}
