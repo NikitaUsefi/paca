@@ -10,7 +10,9 @@ FROM --platform=$BUILDPLATFORM golang:1.26-alpine AS builder
 WORKDIR /build
 
 COPY go.mod go.sum ./
-RUN go mod download
+ARG GOPROXY=https://proxy.golang.org|direct
+ENV GOPROXY=$GOPROXY
+RUN apk add --no-cache git && go mod download
 
 COPY . .
 
