@@ -48,7 +48,7 @@ export type {
 } from "./types";
 
 const TITLE_CLASSES =
-	"font-[Syne] text-xl lg:text-3xl font-bold leading-snug text-foreground tracking-tight w-full";
+	"task-title-bidi text-xl lg:text-3xl font-bold leading-snug text-foreground tracking-tight w-full";
 
 export function TaskDetailModal({
 	task: taskProp,
@@ -345,6 +345,7 @@ export function TaskDetailModal({
 							{editingTitle ? (
 								<textarea
 									ref={titleInputRef}
+									dir="auto"
 									value={titleDraft}
 									onChange={(e) => setTitleDraft(e.target.value)}
 									onBlur={() => {
@@ -373,6 +374,7 @@ export function TaskDetailModal({
 							) : (
 								// biome-ignore lint/a11y/useKeyWithClickEvents: inline title click-to-edit
 								<h1
+									dir="auto"
 									className={cn(
 										TITLE_CLASSES,
 										canEdit &&

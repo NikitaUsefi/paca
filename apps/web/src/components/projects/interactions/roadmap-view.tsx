@@ -270,7 +270,10 @@ export function RoadmapView({
 								type?.color ?? "oklch(var(--muted-foreground) / 0.25)",
 						}}
 					/>
-					<span className="min-w-0 truncate text-sm font-medium text-foreground/85">
+					<span
+						dir="auto"
+						className="user-content-bidi min-w-0 truncate text-sm font-medium text-foreground/85"
+					>
 						{task.title}
 					</span>
 				</div>

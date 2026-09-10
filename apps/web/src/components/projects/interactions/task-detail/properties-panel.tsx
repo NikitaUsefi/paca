@@ -372,7 +372,10 @@ export function PropertiesPanel({
 										{epic ? (
 											<>
 												<Layers className="size-3.5 shrink-0 text-violet-500/80" />
-												<span className="truncate text-foreground/80">
+												<span
+													dir="auto"
+													className="user-content-bidi truncate text-foreground/80"
+												>
 													{epic.title}
 												</span>
 											</>
@@ -406,6 +409,7 @@ export function PropertiesPanel({
 												<Search className="pointer-events-none absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground/50" />
 												<input
 													type="text"
+													dir="auto"
 													value={epicSearch}
 													onChange={(e) => setEpicSearch(e.target.value)}
 													onKeyDown={(e) => {
@@ -415,7 +419,7 @@ export function PropertiesPanel({
 														if (e.key !== "Escape") e.stopPropagation();
 													}}
 													placeholder={t("epicPicker.searchPlaceholder")}
-													className="w-full rounded-lg border border-border/30 bg-muted/25 py-1.5 pr-2 pl-8 text-sm placeholder:text-muted-foreground/50 transition-all duration-150 focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/20"
+													className="user-content-bidi w-full rounded-lg border border-border/30 bg-muted/25 py-1.5 pr-2 pl-8 text-sm placeholder:text-muted-foreground/50 transition-all duration-150 focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/20"
 												/>
 											</div>
 										</div>
@@ -437,7 +441,9 @@ export function PropertiesPanel({
 															}
 														>
 															<Layers className="size-3.5 mr-2 shrink-0 text-violet-500/80" />
-															<span className="truncate">{e.title}</span>
+															<span dir="auto" className="user-content-bidi truncate">
+																{e.title}
+															</span>
 														</DropdownMenuItem>
 													))}
 													{displayedEpics.length === 0 && (
@@ -485,7 +491,10 @@ export function PropertiesPanel({
 											) : (
 												<ArrowRight className="size-3.5 shrink-0 opacity-60" />
 											)}
-											<span className="truncate text-foreground/80">
+											<span
+												dir="auto"
+												className="user-content-bidi truncate text-foreground/80"
+											>
 												{parentTask.title}
 											</span>
 										</DropdownMenuTrigger>

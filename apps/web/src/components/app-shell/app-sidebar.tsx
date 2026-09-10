@@ -1378,7 +1378,9 @@ function ProjectInteractionsSection({
 										)}
 									>
 										<KanbanSquare className="size-4" />
-										<span className="flex-1 truncate">{sprint.name}</span>
+										<span dir="auto" className="user-content-bidi flex-1 truncate">
+											{sprint.name}
+										</span>
 									</SidebarMenuButton>
 								</SidebarMenuItem>
 							);
@@ -1433,7 +1435,9 @@ function ProjectInteractionsSection({
 													)}
 												>
 													<Clock className="size-4" />
-													<span className="flex-1 truncate">{sprint.name}</span>
+													<span dir="auto" className="user-content-bidi flex-1 truncate">
+														{sprint.name}
+													</span>
 												</SidebarMenuButton>
 											</SidebarMenuItem>
 										);
@@ -1481,7 +1485,9 @@ function ProjectInteractionsSection({
 													)}
 												>
 													<CheckCircle2 className="size-4" />
-													<span className="flex-1 truncate">{sprint.name}</span>
+													<span dir="auto" className="user-content-bidi flex-1 truncate">
+														{sprint.name}
+													</span>
 												</SidebarMenuButton>
 											</SidebarMenuItem>
 										);

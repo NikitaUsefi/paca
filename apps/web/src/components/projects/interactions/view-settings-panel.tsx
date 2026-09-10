@@ -368,7 +368,9 @@ function SprintFilterSection({
 							selected={selected}
 							onClick={() => toggle(sprint.id)}
 						>
-							{sprint.name}
+							<span dir="auto" className="user-content-bidi">
+								{sprint.name}
+							</span>
 						</FilterPill>
 					);
 				})}

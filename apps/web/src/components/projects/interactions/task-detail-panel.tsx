@@ -75,7 +75,10 @@ export function TaskDetailPanel({
 									</span>
 								)}
 							</div>
-							<SheetTitle className="font-[Syne] text-lg font-bold leading-snug pr-6 tracking-tight">
+							<SheetTitle
+								dir="auto"
+								className="task-title-bidi text-lg font-bold leading-snug pr-6 tracking-tight"
+							>
 								{task.title}
 							</SheetTitle>
 						</SheetHeader>
@@ -180,7 +183,10 @@ export function TaskDetailPanel({
 										<span>{t("taskDetail.description.title")}</span>
 										<div className="flex-1 h-px bg-linear-to-r from-border/40 to-transparent" />
 									</h3>
-									<p className="text-sm text-foreground/80 whitespace-pre-wrap leading-relaxed">
+									<p
+										dir="auto"
+										className="user-content-bidi text-sm text-foreground/80 whitespace-pre-wrap leading-relaxed"
+									>
 										{(
 											task.description as Array<{
 												content?: Array<{ type: string; text?: string }>;

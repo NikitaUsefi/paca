@@ -1,5 +1,14 @@
 FROM golang:1.26-alpine
 
+# Prefer the public Go module mirror, but fall back to the module's source
+# repository on any proxy error (including regional HTTP 403 responses).
+ARG GOPROXY=https://proxy.golang.org|direct
+ENV GOPROXY=$GOPROXY
+
+# Direct module downloads require a VCS client. Alpine's Go image does not
+# include Git by default.
+RUN apk add --no-cache git
+
 # Install air once at image-build time so the installation is cached in the
 # Docker layer and does not repeat on every container start.
 RUN go install github.com/air-verse/air@latest

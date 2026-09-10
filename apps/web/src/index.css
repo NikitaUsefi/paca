@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=JetBrains+Mono:wght@400;500;600&family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=JetBrains+Mono:wght@400;500;600&family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&family=Vazirmatn:wght@400;500;600;700;800&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "tw-shimmer";
@@ -20,6 +20,30 @@
  */
 .bn-root.bn-shadcn {
 	--bn-ui-base-z-index: 50;
+}
+
+/*
+ * User-authored project content can mix LTR and RTL scripts while the product
+ * chrome remains LTR. `dir="auto"` selects the base direction from the first
+ * strong character; `plaintext` repeats that calculation for every paragraph.
+ */
+.user-content-bidi {
+	font-family: "DM Sans", "Vazirmatn", Tahoma, Arial, sans-serif;
+	text-align: start;
+	unicode-bidi: plaintext;
+}
+
+.task-title-bidi {
+	font-family: "Syne", "Vazirmatn", Tahoma, Arial, sans-serif;
+	text-align: start;
+	unicode-bidi: plaintext;
+}
+
+.bidi-block-editor .bn-block-content,
+.bidi-block-editor [data-content-type] {
+	font-family: "DM Sans", "Vazirmatn", Tahoma, Arial, sans-serif;
+	text-align: start;
+	unicode-bidi: plaintext;
 }
 
 @custom-variant dark (&:is(.dark *));

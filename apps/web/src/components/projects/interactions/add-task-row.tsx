@@ -125,6 +125,7 @@ export function AddTaskRow({
 				)}
 				<input
 					ref={inputRef}
+					dir="auto"
 					value={value}
 					onChange={(e) => setValue(e.target.value)}
 					onKeyDown={(e) => {
@@ -132,7 +133,7 @@ export function AddTaskRow({
 						if (e.key === "Escape") cancel();
 					}}
 					placeholder={resolvedPlaceholder}
-					className="w-full rounded-lg border border-border/30 bg-muted/15 px-3 py-2 text-sm font-medium outline-none placeholder:text-muted-foreground/50 focus:border-primary/40 focus:ring-2 focus:ring-primary/15 transition-all duration-150"
+					className="user-content-bidi w-full rounded-lg border border-border/30 bg-muted/15 px-3 py-2 text-sm font-medium outline-none placeholder:text-muted-foreground/50 focus:border-primary/40 focus:ring-2 focus:ring-primary/15 transition-all duration-150"
 				/>
 				<div className="mt-2 flex items-center gap-1.5 justify-end">
 					{actionButtons}
@@ -149,6 +150,7 @@ export function AddTaskRow({
 				{typeSelector}
 				<input
 					ref={inputRef}
+					dir="auto"
 					value={value}
 					onChange={(e) => setValue(e.target.value)}
 					onKeyDown={(e) => {
@@ -156,7 +158,7 @@ export function AddTaskRow({
 						if (e.key === "Escape") cancel();
 					}}
 					placeholder={resolvedPlaceholder}
-					className="flex-1 bg-transparent text-sm font-medium outline-none placeholder:text-muted-foreground/50"
+					className="user-content-bidi flex-1 bg-transparent text-sm font-medium outline-none placeholder:text-muted-foreground/50"
 				/>
 				{actionButtons}
 			</div>

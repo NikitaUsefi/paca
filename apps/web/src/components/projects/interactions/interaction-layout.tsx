@@ -1759,7 +1759,10 @@ export function InteractionLayout({
 			{/* Header */}
 			<div className="shrink-0 border-b border-border/30 px-8 py-5">
 				<div className="flex items-center gap-3">
-					<h1 className="font-[Syne] text-2xl font-bold tracking-tight flex-1">
+					<h1
+						dir="auto"
+						className="task-title-bidi text-2xl font-bold tracking-tight flex-1"
+					>
 						{title}
 					</h1>
 					{headerActions}
@@ -1776,7 +1779,12 @@ export function InteractionLayout({
 					)}
 				</div>
 				{description && (
-					<p className="mt-1 text-sm text-muted-foreground">{description}</p>
+					<p
+						dir="auto"
+						className="user-content-bidi mt-1 text-sm text-muted-foreground whitespace-pre-wrap"
+					>
+						{description}
+					</p>
 				)}
 			</div>
 

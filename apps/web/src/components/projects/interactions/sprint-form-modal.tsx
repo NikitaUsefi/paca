@@ -196,9 +196,10 @@ export function SprintFormModal({
 						</label>
 						<input
 							id={`${idPrefix}-name`}
+							dir="auto"
 							value={name}
 							onChange={(e) => setName(e.target.value)}
-							className="rounded-md border border-input bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/30 placeholder:text-muted-foreground/50"
+							className="user-content-bidi rounded-md border border-input bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/30 placeholder:text-muted-foreground/50"
 						/>
 					</div>
 					<div className="flex flex-col gap-1.5">
@@ -211,11 +212,12 @@ export function SprintFormModal({
 						</label>
 						<textarea
 							id={`${idPrefix}-goal`}
+							dir="auto"
 							value={goal}
 							onChange={(e) => setGoal(e.target.value)}
 							rows={4}
 							placeholder={goalPlaceholder}
-							className="rounded-md border border-input bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/30 placeholder:text-muted-foreground/50 resize-y"
+							className="user-content-bidi rounded-md border border-input bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-primary/30 placeholder:text-muted-foreground/50 resize-y"
 						/>
 					</div>
 					<div className="grid grid-cols-2 gap-3">

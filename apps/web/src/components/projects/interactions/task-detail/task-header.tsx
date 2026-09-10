@@ -107,7 +107,10 @@ export function TaskHeader({
 							<ChevronRight className="size-3 text-muted-foreground/45" />
 						</>
 					)}
-					<span className="text-foreground/80 truncate max-w-36 font-medium">
+					<span
+						dir="auto"
+						className="user-content-bidi text-foreground/80 truncate max-w-36 font-medium"
+					>
 						{task.title}
 					</span>
 				</nav>

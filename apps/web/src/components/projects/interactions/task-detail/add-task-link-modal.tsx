@@ -199,10 +199,11 @@ export function AddTaskLinkModal({
 						<input
 							ref={searchRef}
 							type="text"
+							dir="auto"
 							value={query}
 							onChange={(e) => setQuery(e.target.value)}
 							placeholder={t("taskDetail.addTaskLinkModal.searchPlaceholder")}
-							className="w-full pl-9 pr-3 py-2.5 rounded-lg border border-border/30 bg-muted/20 text-sm placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all duration-150"
+							className="user-content-bidi w-full pl-9 pr-3 py-2.5 rounded-lg border border-border/30 bg-muted/20 text-sm placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all duration-150"
 						/>
 					</div>
 				</div>
@@ -234,7 +235,10 @@ export function AddTaskLinkModal({
 									<span className="shrink-0 text-xs font-mono text-muted-foreground/60 min-w-13">
 										{prefix}
 									</span>
-									<span className="text-sm text-foreground truncate">
+									<span
+										dir="auto"
+										className="user-content-bidi text-sm text-foreground truncate"
+									>
 										{task.title}
 									</span>
 								</button>

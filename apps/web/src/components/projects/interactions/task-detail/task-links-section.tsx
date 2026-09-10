@@ -144,11 +144,12 @@ export function TaskLinksSection({
 											<span
 												role="button"
 												tabIndex={onNavigateToTask ? 0 : -1}
-												className={`flex-1 text-sm text-foreground truncate ${
+											className={`user-content-bidi flex-1 text-sm text-foreground truncate ${
 													onNavigateToTask
 														? "cursor-pointer hover:text-primary transition-colors duration-100"
 														: ""
 												}`}
+												dir="auto"
 												onClick={() => onNavigateToTask?.(linkedTask.id)}
 												onKeyDown={(e) => {
 													if (e.key === "Enter" || e.key === " ") {

@@ -684,7 +684,9 @@ export function TaskRow({
 								{epic ? (
 									<>
 										<Layers className="size-3 shrink-0 opacity-70" />
-										<span className="truncate">{epic.title}</span>
+										<span dir="auto" className="user-content-bidi truncate">
+											{epic.title}
+										</span>
 									</>
 								) : (
 									<span className="text-muted-foreground/40">—</span>
@@ -698,10 +700,11 @@ export function TaskRow({
 									<Search className="pointer-events-none absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground/50" />
 									<input
 										type="text"
+										dir="auto"
 										value={epicSearch}
 										onChange={(e) => setEpicSearch(e.target.value)}
 										placeholder={t("epicPicker.searchPlaceholder")}
-										className="w-full rounded-lg border border-border/30 bg-muted/25 py-1.5 pr-2 pl-8 text-sm placeholder:text-muted-foreground/50 transition-all duration-150 focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/20"
+										className="user-content-bidi w-full rounded-lg border border-border/30 bg-muted/25 py-1.5 pr-2 pl-8 text-sm placeholder:text-muted-foreground/50 transition-all duration-150 focus:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/20"
 									/>
 								</div>
 								<div
@@ -740,7 +743,10 @@ export function TaskRow({
 													}
 												>
 													<Layers className="size-3.5 shrink-0 text-violet-500 opacity-70" />
-													<span className="flex-1 text-left truncate">
+													<span
+														dir="auto"
+														className="user-content-bidi flex-1 truncate"
+													>
 														{e.title}
 													</span>
 													{e.id === task.parent_task_id && (
@@ -775,7 +781,9 @@ export function TaskRow({
 						{epic ? (
 							<span className="inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-medium border border-violet-500/30 bg-violet-500/10 text-violet-600 dark:text-violet-400 truncate max-w-full">
 								<Layers className="size-3 shrink-0 opacity-70" />
-								<span className="truncate">{epic.title}</span>
+								<span dir="auto" className="user-content-bidi truncate">
+									{epic.title}
+								</span>
 							</span>
 						) : (
 							<span className="text-xs text-muted-foreground/40">—</span>
@@ -904,7 +912,10 @@ export function TaskRow({
 			</span>
 
 			{/* Title */}
-			<span className="flex-1 text-sm font-medium text-foreground truncate">
+			<span
+				dir="auto"
+				className="user-content-bidi flex-1 text-sm font-medium text-foreground truncate"
+			>
 				{task.title}
 			</span>
 

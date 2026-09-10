@@ -238,6 +238,7 @@ export function DescriptionSection({
 
 			{/* biome-ignore lint/a11y/noStaticElementInteractions: wrapper captures blur from BlockNote rich-text editor */}
 			<div
+				dir="auto"
 				className="rounded-xl border border-border/25 bg-card/50 hover:border-border/50 transition-all duration-200 overflow-hidden [&_.bn-editor]:min-h-20 [&_.bn-editor]:py-3 [&_.bn-editor]:text-base [&_.bn-editor]:leading-relaxed"
 				onBlur={handleBlur}
 				onKeyDown={handleKeyDown}
@@ -247,7 +248,7 @@ export function DescriptionSection({
 					editable={canEdit}
 					onChange={handleChange}
 					theme={resolvedMode}
-					className="bn-shadcn"
+					className="bn-shadcn bidi-block-editor"
 					sideMenu={false}
 				>
 					<SideMenuController sideMenu={CustomSideMenu} />

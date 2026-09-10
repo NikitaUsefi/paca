@@ -81,7 +81,10 @@ export function SubtaskRow({
 			</span>
 
 			{/* Title */}
-			<span className="flex-1 text-sm font-medium text-foreground truncate min-w-0">
+			<span
+				dir="auto"
+				className="user-content-bidi flex-1 text-sm font-medium text-foreground truncate min-w-0"
+			>
 				{task.title}
 			</span>
 
